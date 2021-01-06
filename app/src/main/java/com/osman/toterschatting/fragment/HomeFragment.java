@@ -43,7 +43,7 @@ public class HomeFragment extends BaseFragment {
     EditText editText;
     ImageView imageViewUser;
     ImageButton imageSend;
-    String userUid = "", myUid, name = "", urlImage = "";
+    String userUid , myUid, name , urlImage;
     ValueEventListener eventListener;
     List<ChatsUser> chatsUserList = new ArrayList<>();
     AdapterChat adapterChat;
@@ -76,6 +76,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setup(view);
         textViewName.setText(name);
         try {
@@ -93,28 +94,22 @@ public class HomeFragment extends BaseFragment {
         recyclerView.setAdapter(adapterChat);
         readMessages();
 
-        super.onViewCreated(view, savedInstanceState);
+
     }
 
-    private void readMessages() {
+    public void readMessages() {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReferences = FirebaseDatabase.getInstance().getReference("Chats");
+        databaseReferences.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatsUserList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     ChatsUser chat = ds.getValue(ChatsUser.class);
-                   // if (chat.getReceiver().equals(myUid) && chat.getSender().equals(userUid) ||
-                        //    chat.getReceiver().equals(userUid) && chat.getSender().equals(myUid)) {
-                        chatsUserList.add(chat);
-
-                        
-
+                 if (chat.getReceiver().equals(myUid) && chat.getSender().equals(userUid) ||
+                          chat.getReceiver().equals(userUid) && chat.getSender().equals(myUid)) {
+                        chatsUserList.add(chat);}
                         adapterChat.notifyDataSetChanged();
-                   // }
-
-
                 }
 
             }

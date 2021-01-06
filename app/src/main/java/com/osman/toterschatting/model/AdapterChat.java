@@ -22,8 +22,8 @@ import java.util.Locale;
 
 public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder>{
 
-    private static final int MSGLEFT = 0;
-    private static final int MSGRIGHT = 1;
+    public static final int MSGLEFT = 0;
+    public static final int MSGRIGHT = 1;
     Context context;
     List<ChatsUser> chatsUserList;
     String imageUrl;

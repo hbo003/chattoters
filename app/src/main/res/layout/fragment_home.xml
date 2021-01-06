@@ -41,11 +41,12 @@
         android:id="@+id/recyleview_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="5dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/send_data"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_chat"
-        tools:listitem="@layout/item_chat_left" />
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/send_data"
