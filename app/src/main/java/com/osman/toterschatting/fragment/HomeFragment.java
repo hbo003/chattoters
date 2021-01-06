@@ -43,10 +43,11 @@ public class HomeFragment extends BaseFragment {
     EditText editText;
     ImageView imageViewUser;
     ImageButton imageSend;
-    String userUid , myUid, name , urlImage;
+    String userUid ="", myUid="", name="" , urlImage="";
     ValueEventListener eventListener;
     List<ChatsUser> chatsUserList = new ArrayList<>();
     AdapterChat adapterChat;
+    DatabaseReference databaseReferences;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -61,6 +62,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        databaseReferences = FirebaseDatabase.getInstance().getReference("Chats");
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             Parcelable user = bundle.getParcelable("user");
@@ -79,6 +81,7 @@ public class HomeFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         setup(view);
         textViewName.setText(name);
+
         try {
             Picasso.get().load(urlImage).placeholder(R.drawable.logototers).into(imageViewUser);
         } catch (Exception e) {
@@ -89,7 +92,7 @@ public class HomeFragment extends BaseFragment {
                 sendMessage(editText.getText().toString().trim());
             }
         });
-
+         chatsUserList = new ArrayList<>();
         adapterChat = new AdapterChat(getActivity(), chatsUserList, urlImage);
         recyclerView.setAdapter(adapterChat);
         readMessages();
@@ -99,19 +102,23 @@ public class HomeFragment extends BaseFragment {
 
     public void readMessages() {
 
-        DatabaseReference databaseReferences = FirebaseDatabase.getInstance().getReference("Chats");
+if(databaseReferences != null){
         databaseReferences.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 chatsUserList.clear();
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     ChatsUser chat = ds.getValue(ChatsUser.class);
-                 if (chat.getReceiver().equals(myUid) && chat.getSender().equals(userUid) ||
-                          chat.getReceiver().equals(userUid) && chat.getSender().equals(myUid)) {
-                        chatsUserList.add(chat);}
-                        adapterChat.notifyDataSetChanged();
-                }
+                    if (chat != null) {
+                        if (chat.getReceiver().equals(myUid) && chat.getSender().equals(userUid) ||
+                                chat.getReceiver().equals(userUid) && chat.getSender().equals(myUid)) {
+                           chatsUserList.add(chat);
+                        }
 
+
+                        adapterChat.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
@@ -119,7 +126,7 @@ public class HomeFragment extends BaseFragment {
 
             }
         });
-    }
+    }}
 
     private void sendMessage(String msg) {
 
@@ -128,7 +135,7 @@ public class HomeFragment extends BaseFragment {
         hashMap.put("receiver", userUid);
         hashMap.put("message", msg);
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
-        databaseReference.child("Chats").push().setValue(hashMap);
+        databaseReferences.push().setValue(hashMap);
         editText.setText("");
 
     }

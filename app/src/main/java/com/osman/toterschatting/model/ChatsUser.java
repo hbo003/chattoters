@@ -1,15 +1,18 @@
 package com.osman.toterschatting.model;
 
-public class ChatsUser {
-    String message, sender, receiver, timestamp;
-    boolean isSeen;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    public ChatsUser(String message, String sender, String receiver, String timestamp, boolean isSeen) {
+public class ChatsUser implements Parcelable {
+    String message, sender, receiver, timestamp;
+   // boolean isSeen;
+public ChatsUser(){}
+    public ChatsUser(String message, String sender, String receiver, String timestamp) {
         this.message = message;
         this.sender = sender;
         this.receiver = receiver;
         this.timestamp = timestamp;
-        this.isSeen = isSeen;
+        //this.isSeen = isSeen;
     }
 
     public String getMessage() {
@@ -44,11 +47,21 @@ public class ChatsUser {
         this.timestamp = timestamp;
     }
 
-    public boolean isSeen() {
-        return isSeen;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setSeen(boolean seen) {
-        isSeen = seen;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
+
+//    public boolean isSeen() {
+//        return isSeen;
+//    }
+//
+//    public void setSeen(boolean seen) {
+//        isSeen = seen;
+//    }
 }
